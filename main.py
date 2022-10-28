@@ -1,9 +1,5 @@
 import av.datasets
-import matplotlib.pyplot
 import matplotlib.pyplot as plt
-from PIL import Image
-import matplotlib
-import os
 import numpy as np
 
 
@@ -33,7 +29,6 @@ def task1(container):
         # print(r / (np.std(temp1) * np.std(temp2) * temp1.size))
     return R
 
-
 def task2(container):
     output = av.open("test4.avi", "w")
     input_stream = container.streams.video[0]
@@ -46,17 +41,6 @@ def task2(container):
         packet.stream = output_stream
         output.mux(packet)
     output.close()
-    # F = []
-    # for frame in container.decode(0):
-    #     F.append(frame.to_rgb())
-    # total_frames = len(F)
-    # container_rez = av.open("test.mp4", mod="w")
-    # stream = container.add_stream("mpeg4", rate=1)
-    # stream.width = container.streams.video[0].codec_context.coded_width
-    # stream.height = container.streams.video[0].codec_context.coded_height
-    # stream.pix_fmt = "yuv420p"
-    #
-
 
 def task3(container1, container2):
     output = av.open("task4.avi", "w")
@@ -73,9 +57,7 @@ def task3(container1, container2):
         output.mux(packet)
     output.close()
 
-
 def dop(container, x, del_x, y, del_y):
-    count = container.streams.video[0].frames
     w = container.streams.video[0].codec_context.coded_width
     h = container.streams.video[0].codec_context.coded_height
     if x < 0 or del_x <= 0 or y < 0 or del_y <= 0 or x + del_x >= w or y + del_y >= h or x >= w or y >= h:
@@ -97,33 +79,33 @@ def dop(container, x, del_x, y, del_y):
                 output_container.mux(packet)
         output_container.close()
 
-
 container = []
 container.append(av.open('./video/lr1_1.AVI'))
 container.append(av.open('./video/lr1_2.AVI'))
 container.append(av.open('./video/lr1_3.AVI'))
-# t1_1 = task1(container[0])
-# t1_2 = task1(container[1])
-# t1_3 = task1(container[2])
-# t1 = t1_1.copy()
-# t1.reverse()
-# t2 = t1_2.copy()
-# t2.reverse()
-# t3 = t1_3.copy()
-# t3.reverse()
-# plt.plot(range(-len(t1_1),0), t1, 'r')
-# plt.plot(range(len(t1_1)), t1_1, 'r')
-# plt.plot(range(-len(t1_2),0), t2, 'g')
-# plt.plot(range(len(t1_2)), t1_2, 'g')
-# plt.plot(range(-len(t1_3),0), t3, 'b')
-# plt.plot(range(len(t1_3)), t1_3, 'b')
-# plt.show()
+t1_1 = task1(container[0])
+t1_2 = task1(container[1])
+t1_3 = task1(container[2])
+t1 = t1_1.copy()
+t1.reverse()
+t2 = t1_2.copy()
+t2.reverse()
+t3 = t1_3.copy()
+t3.reverse()
+plt.plot(range(-len(t1_1),0), t1, 'r', label='avi1')
+plt.plot(range(len(t1_1)), t1_1, 'r')
+plt.plot(range(-len(t1_2),0), t2, 'g', label='avi2')
+plt.plot(range(len(t1_2)), t1_2, 'g')
+plt.plot(range(-len(t1_3),0), t3, 'b', label='avi3')
+plt.plot(range(len(t1_3)), t1_3, 'b')
+plt.legend()
+plt.show()
 
-# task2(container[0])
+task2(container[0])
 
-# task3(container[0], container[1])
+task3(container[0], container[1])
 
-dop(container[0], 50, 150, 60, 100)
+dop(container[0], 100, 200, 100, 200)
 
 container[0].close()
 container[1].close()
