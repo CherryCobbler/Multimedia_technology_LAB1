@@ -48,6 +48,7 @@ def SAD(block1, block2):
 def mon_search(pic_ref, pic2, r, block_size):
     dx = block_size
     dy = block_size
+    #
     vectors = []
     for x_cur in range(0, pic2.shape[0], dx):
         for y_cur in range(0, pic2.shape[1], dy):
@@ -56,9 +57,11 @@ def mon_search(pic_ref, pic2, r, block_size):
 
 
 def deep_search(x, y, pic2, pic_ref, dx, dy, r):
+    r = 1
     minSAD = 9223372936854775807
     minx = x
     miny = y
+    #print([x,y])
     block = pic2[x:x + dx, y:y + dy]
     for x_r in range(x - (r * dx), x + (r * dy), dx):
         for y_r in range(y - (r * dx), y + (r * dy), dy):
@@ -74,19 +77,7 @@ def deep_search(x, y, pic2, pic_ref, dx, dy, r):
     return minx, miny
 
 
-def local_search(pic1, pic2, x, y, block_size, minSAD):
-    vec = [x, y]
-    for i in range(x - block_size, x + block_size):
-        for j in range(y - block_size, y + block_size):
-            try:
-                curSAD = SAD(pic1[x:block_size, y:block_size], pic2[i:i + block_size, j:j + block_size])
-            except ValueError:
-                continue
-            if curSAD <= minSAD:
-                minSAD = curSAD
-                vec = [i, j]
-    # print(f'her,{x},{y}')
-    return vec
+
 
 
 def motion_compensation(ref, motion_vecs, block_size):
@@ -300,8 +291,8 @@ def jpeg_processing(frame, vecs):
 
 
 def p1(src, num, R):
-    sstep = 4
-    r = 2
+    sstep = 33 #размеры области
+    r = 8 #для локального поиска
     output = av.open('./video/lr1_4.AVI', "w")
     inputvid = av.open(src)
     frames = list(inputvid.decode(video=0))
@@ -364,13 +355,13 @@ def p1(src, num, R):
 
 
 fig, axs = plt.subplots(3)
-src = './video/lr1_1.AVI'
+src = './video/lr1_2.AVI'
 graph = []
 graphj = []
 compj = []
 compm = []
-num = 12
-for R in range(0, 10, 1):
+num = 60
+for R in range(0, num, 1):
     print(R)
     a, j, b, c = p1(src, num, R)
     graph.append(a)
